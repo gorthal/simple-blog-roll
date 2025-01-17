@@ -2,15 +2,13 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const bodyParser = require("body-parser");
 const app = express();
-
-// Configuration
-const PORT = 3000;
 const SECRET_URL = "/moderate"; // URL secrète pour modération
-const db = new sqlite3.Database("blogroll.db");
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static("public")); // Pour servir les fichiers statiques
+
+// Base de données SQLite
+const db = new sqlite3.Database("blogroll.db");
 
 // Initialisation de la base de données
 db.serialize(() => {
@@ -69,7 +67,5 @@ app.delete(`${SECRET_URL}/delete/:id`, (req, res) => {
   });
 });
 
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur lancé sur http://localhost:${PORT}`);
-});
+// Exporter comme module pour Vercel
+module.exports = app;
