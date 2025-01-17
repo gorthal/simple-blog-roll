@@ -2,7 +2,7 @@ let blogs = [];
 let currentIndex = 0;
 
 // Charger les blogs depuis le serveur
-fetch("https://your-server-url/blogs")
+fetch("http://localhost:3000/blogs")
   .then((response) => response.json())
   .then((data) => {
     blogs = data;

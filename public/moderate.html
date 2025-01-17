@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderate Blogroll</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input,
+        button,
+        textarea {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .blog-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .blog-actions button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blogroll - Modération</h1>
+
+    <form id="add-blog-form">
+        <h3>Ajouter un blog</h3>
+        <input type="text" id="name" placeholder="Nom du blog" required>
+        <input type="url" id="url" placeholder="URL du blog" required>
+        <textarea id="description" placeholder="Description (250 caractères max)" maxlength="250" required></textarea>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <h3>Liste des blogs</h3>
+    <div id="blogs-container"></div>
+
+    <script>
+        const API_BASE_URL = window.location.origin;
+
+        // Fonction pour récupérer et afficher les blogs
+        async function fetchBlogs() {
+            const response = await fetch(`${API_BASE_URL}/blogs`);
+            const blogs = await response.json();
+            const blogsContainer = document.getElementById("blogs-container");
+            blogsContainer.innerHTML = "";
+
+            blogs.forEach(blog => {
+                const blogItem = document.createElement("div");
+                blogItem.className = "blog-item";
+                blogItem.innerHTML = `
+          <strong>${blog.name}</strong> (<a href="${blog.url}" target="_blank">${blog.url}</a>)
+          <p>${blog.description}</p>
+          <div class="blog-actions">
+            <button onclick="editBlog(${blog.id}, '${blog.name}', '${blog.url}', '${blog.description}')">Modifier</button>
+            <button onclick="deleteBlog(${blog.id})">Supprimer</button>
+          </div>
+        `;
+                blogsContainer.appendChild(blogItem);
+            });
+        }
+
+        // Fonction pour ajouter un blog
+        document.getElementById("add-blog-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const url = document.getElementById("url").value;
+            const description = document.getElementById("description").value;
+
+            const response = await fetch(`${API_BASE_URL}/add`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, url, description })
+            });
+
+            if (response.ok) {
+                alert("Blog ajouté avec succès !");
+                fetchBlogs();
+                e.target.reset();
+            } else {
+                alert("Erreur lors de l'ajout du blog.");
+            }
+        });
+
+        // Fonction pour supprimer un blog
+        async function deleteBlog(id) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce blog ?")) {
+                const response = await fetch(`${API_BASE_URL}/moderate/delete/${id}`, {
+                    method: "DELETE"
+                });
+
+                if (response.ok) {
+                    alert("Blog supprimé avec succès !");
+                    fetchBlogs();
+                } else {
+                    alert("Erreur lors de la suppression du blog.");
+                }
+            }
+        }
+
+        // Fonction pour modifier un blog
+        function editBlog(id, name, url, description) {
+            const newName = prompt("Modifier le nom :", name);
+            const newUrl = prompt("Modifier l'URL :", url);
+            const newDescription = prompt("Modifier la description :", description);
+
+            if (newName && newUrl && newDescription) {
+                fetch(`${API_BASE_URL}/moderate/update/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: newName, url: newUrl, description: newDescription })
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Blog modifié avec succès !");
+                        fetchBlogs();
+                    } else {
+                        alert("Erreur lors de la modification du blog.");
+                    }
+                });
+            }
+        }
+
+        // Chargement initial des blogs
+        fetchBlogs();
+    </script>
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 
 un moteur de blogroll le plus simple possible à héberger et partager
 
-## serveur
+## serveur en local
 
 - npm install express sqlite3 body-parser
 - node server.js
