@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Blog</title>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <img src="https://picsum.photos/40/40" alt="Logo" class="h-10">
+                    <span class="ml-2 text-xl font-bold">MonBlog</span>
+                </div>
+                <nav>
+                    <ul class="flex space-x-4">
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Accueil</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Articles</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">À propos</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex gap-8">
+            <!-- Articles -->
+            <main class="flex-1">
+                <!-- Article 1 -->
+                <article class="bg-white rounded-lg shadow-md mb-8">
+                    <img src="https://picsum.photos/id/42/800/400" alt="Article 1" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold mb-2">Comment reprendre le contrôle du web?</h2>
+                        <div class="text-gray-600 mb-4">Publié le 17 janvier 2025</div>
+                        <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">Lire la suite →</a>
+                    </div>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="bg-white rounded-lg shadow-md">
+                    <img src="https://picsum.photos/800/400" alt="Article 2" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold mb-2">Un web d'amateurices</h2>
+                        <div class="text-gray-600 mb-4">Publié le 16 janvier 2025</div>
+                        <p class="text-gray-700 mb-4">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                            nisi ut aliquip ex ea commodo consequat.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">Lire la suite →</a>
+                    </div>
+                </article>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="w-80 shrink-0">
+                <!-- Search -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <h3 class="text-lg font-bold mb-4">Rechercher</h3>
+                    <input type="search" placeholder="Rechercher..." class="w-full p-2 border rounded">
+                </div>
+
+                <!-- Blogroll -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <h3 class="text-lg font-bold mb-4">BlogRoll</h3>
+                    <div id="blogroll-container">
+                        <button id="prev-blog">⬅️ Précédent</button>
+                        <div>
+                            <h3 id="blog-name"></h3>
+                            <p id="blog-description"></p>
+                            <a id="blog-url" href="#" target="_blank">Visiter</a>
+                        </div>
+                        <button id="next-blog">➡️ Suivant</button>
+                        <button id="random-blog">🎲 un blog au hasard</button>
+                    </div>
+                    <script src="http://localhost:3000/blogroll.js"></script>
+                </div>
+
+                <!-- Categories -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <h3 class="text-lg font-bold mb-4">Catégories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Laravel (12)</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Vue.js (8)</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">Tailwind CSS (6)</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-gray-900">PHP (15)</a></li>
+                    </ul>
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <h3 class="text-lg font-bold mb-4">Articles récents</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#" class="text-gray-700 hover:text-gray-900">Les nouveautés de Laravel 10</a>
+                            <div class="text-sm text-gray-600">15 janvier 2025</div>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-700 hover:text-gray-900">Guide du débutant Vue.js</a>
+                            <div class="text-sm text-gray-600">14 janvier 2025</div>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+
+</html>
