@@ -1,0 +1,17 @@
+{
+  "blogs": [
+    {
+      "id": 1,
+      "name": "toto",
+      "url": "https://ludotheque.cestpasdujdr.fr/",
+      "description": "ludo"
+    },
+    {
+      "id": 2,
+      "name": "google.fr",
+      "url": "https://www.google.fr",
+      "description": "google"
+    }
+  ],
+  "lastId": 2
+}

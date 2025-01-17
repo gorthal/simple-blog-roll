@@ -1,30 +1,32 @@
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fs = require("fs");
 const app = express();
 
 // Configuration
 const PORT = 3000;
-const SECRET_URL = "/moderate"; // URL secrète pour modération
-const db = new sqlite3.Database("blogroll.db");
+const SECRET_URL = "/moderate";
+const DB_FILE = "blogroll.json";
+
+// Initialize JSON database if it doesn't exist
+if (!fs.existsSync(DB_FILE)) {
+  fs.writeFileSync(DB_FILE, JSON.stringify({ blogs: [], lastId: 0 }));
+}
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors()); // Active CORS pour toutes les requêtes
-app.use(express.static("public")); // Pour servir les fichiers statiques
+app.use(cors());
+app.use(express.static("public"));
 
-// Initialisation de la base de données
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS blogs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      url TEXT NOT NULL,
-      description TEXT NOT NULL
-    )
-  `);
-});
+// Database operations
+const readDB = () => {
+  return JSON.parse(fs.readFileSync(DB_FILE));
+};
+
+const writeDB = (data) => {
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+};
 
 // Routes
 app.post("/add", (req, res) => {
@@ -34,44 +36,35 @@ app.post("/add", (req, res) => {
     return res.status(400).json({ error: "Données invalides." });
   }
 
-  db.run(
-    "INSERT INTO blogs (name, url, description) VALUES (?, ?, ?)",
-    [name, url, description],
-    (err) => {
-      if (err) {
-        res.status(500).json({ error: "Erreur lors de l'ajout du blog." });
-      } else {
-        res.json({ success: true, message: "Blog ajouté avec succès !" });
-      }
-    }
-  );
+  const db = readDB();
+  const newId = db.lastId + 1;
+  
+  db.blogs.push({
+    id: newId,
+    name,
+    url,
+    description
+  });
+  
+  db.lastId = newId;
+  writeDB(db);
+
+  res.json({ success: true, message: "Blog ajouté avec succès !" });
 });
 
 app.get("/blogs", (req, res) => {
-  db.all("SELECT * FROM blogs", [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: "Erreur lors de la récupération des blogs." });
-    } else {
-      res.json(rows);
-    }
-  });
+  const db = readDB();
+  res.json(db.blogs);
 });
 
 app.delete(`${SECRET_URL}/delete/:id`, (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
+  const db = readDB();
+  
+  db.blogs = db.blogs.filter(blog => blog.id !== id);
+  writeDB(db);
 
-  db.run("DELETE FROM blogs WHERE id = ?", [id], (err) => {
-    if (err) {
-      res.status(500).json({ error: "Erreur lors de la suppression du blog." });
-    } else {
-      res.json({ success: true, message: "Blog supprimé avec succès." });
-    }
-  });
-});
-
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur lancé sur http://localhost:${PORT}`);
+  res.json({ success: true, message: "Blog supprimé avec succès." });
 });
 
 app.get("/moderate", (req, res) => {
@@ -79,22 +72,31 @@ app.get("/moderate", (req, res) => {
 });
 
 app.put("/moderate/update/:id", (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id);
   const { name, url, description } = req.body;
 
   if (!name || !url || !description || description.length > 250) {
     return res.status(400).json({ error: "Données invalides." });
   }
 
-  db.run(
-    "UPDATE blogs SET name = ?, url = ?, description = ? WHERE id = ?",
-    [name, url, description, id],
-    (err) => {
-      if (err) {
-        res.status(500).json({ error: "Erreur lors de la mise à jour du blog." });
-      } else {
-        res.json({ success: true, message: "Blog mis à jour avec succès !" });
-      }
-    }
-  );
+  const db = readDB();
+  const blogIndex = db.blogs.findIndex(blog => blog.id === id);
+  
+  if (blogIndex === -1) {
+    return res.status(404).json({ error: "Blog non trouvé." });
+  }
+
+  db.blogs[blogIndex] = {
+    id,
+    name,
+    url,
+    description
+  };
+
+  writeDB(db);
+  res.json({ success: true, message: "Blog mis à jour avec succès !" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Serveur lancé sur http://localhost:${PORT}`);
 });
