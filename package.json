@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node api/index.js",
+    "dev": "vercel dev",
     "start": "node api/index.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "@vercel/kv": "^3.0.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "body-parser": "^1.20.2"
+    "express": "^4.18.2"
   }
 }
