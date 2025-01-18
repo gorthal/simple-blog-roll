@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modération Blogroll</title>
+    <script defer src="./moderation.js"></script>
+</head>
+
+<body>
+    <h1>Modération Blogroll</h1>
+    <form id="addForm">
+        <input type="text" id="name" placeholder="Nom du blog" required />
+        <textarea id="description" placeholder="Description (250 caractères max)" maxlength="250" required></textarea>
+        <input type="url" id="url" placeholder="URL du blog" required />
+        <button type="submit">Ajouter un blog</button>
+    </form>
+    <ul id="blogsList"></ul>
+</body>
+
+</html>

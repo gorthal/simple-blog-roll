@@ -1,0 +1,16 @@
+#blogroll {
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+    max-width: 600px;
+}
+
+#blogControls button {
+    margin: 5px;
+}
+
+@media (max-width: 600px) {
+    #blogroll {
+        font-size: 14px;
+    }
+}
